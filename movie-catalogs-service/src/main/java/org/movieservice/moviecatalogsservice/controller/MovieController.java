@@ -29,11 +29,12 @@ public class MovieController {
 	@GetMapping("/{userId}")
 	public List<CatalogItem> getStatus(@PathVariable("userId") String userId) {
 		
-		UserRating userRating = restTemplate.getForObject("http://127.0.0.1:8083/ratingsData/users/1102", UserRating.class);
+		//In the URL, we give the service name as registered in Eureka Server (MOVIE-RATINGS-SERVICE)
+		UserRating userRating = restTemplate.getForObject("http://MOVIE-RATINGS-SERVICE/ratingsData/users/1102", UserRating.class);
 		List<CatalogItem> listCatalogItems = new ArrayList<>();
 
 		for (Rating rating : userRating.getListUserRatings()) {
-			Movie movie = restTemplate.getForObject("http://127.0.0.1:8082/movies/1102", Movie.class);
+			Movie movie = restTemplate.getForObject("http://MOVIE-INFO-SERVICE/movies/1102", Movie.class);
 			logger.info("Movie Details from Movie Info Service : {} " , movie.toString());
 			CatalogItem catelogItem = new CatalogItem(movie.getName(), "Save Humanity", rating.getRating());
 			listCatalogItems.add(catelogItem);
